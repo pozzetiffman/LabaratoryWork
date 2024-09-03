@@ -7,13 +7,14 @@ using namespace std;
 
 // Функция для вывода текущего состояния Вселенной
 void printUniverse(const vector<vector<bool>>& universe, int generation, int liveCount) {
-    cout << "Generation: " << generation << ", Live cells: " << liveCount << endl; // Вывод номера поколения и количества живых клеток
+    cout << "Поколение: " << generation << endl; // Вывод номера поколения
     for (const auto& row : universe) { // Проход по каждой строке Вселенной
         for (bool cell : row) { // Проход по каждой клетке в строке
             cout << (cell ? '*' : '-') << ' '; // Вывод символов '*' для живых и '-' для мертвых клеток
         }
         cout << endl; // Новая строка после завершения каждой строки Вселенной
     }
+    cout << "Живых клеток: " << liveCount << endl; // Вывод количества живых клеток
 }
 
 // Функция для чтения начального состояния Вселенной из файла
@@ -62,7 +63,7 @@ vector<vector<bool>> updateUniverse(const vector<vector<bool>>& current) {
 int main() {
     string filename = "/Users/admin/Desktop/txt.txt"; // Имя файла с начальным состоянием
     auto universe = readInitialSetup(filename); // Чтение начального состояния
-    int generation = 0; // Инициализация номера поколения
+    int generation = 1; // Начало отсчета поколений с единицы
     int liveCount; // Инициализация счетчика живых клеток
 
     // Основной цикл игры
@@ -75,7 +76,11 @@ int main() {
         }
         printUniverse(universe, generation, liveCount); // Вывод текущего состояния
         auto nextUniverse = updateUniverse(universe); // Обновление Вселенной
-        if (nextUniverse == universe || liveCount == 0) { // Проверка условий завершения игры
+        if (nextUniverse == universe) { // Проверка условия стагнации
+            cout << "Мир застыл!" << endl; // Сообщение о стагнации
+            break; // Выход из цикла
+        }
+        if (liveCount == 0) { // Проверка условий завершения игры
             cout << "Game over at generation " << generation << " with " << liveCount << " live cells." << endl; // Сообщение о завершении игры
             break; // Выход из цикла
         }
